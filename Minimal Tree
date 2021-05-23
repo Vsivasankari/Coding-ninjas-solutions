@@ -1,0 +1,16 @@
+BinaryTreeNode<int>* minimalTreeHelper(vector<int> &arr, int left, int right) 
+{
+    if(left > right) {
+        return NULL;
+    }
+    int mid = (left + right)/2;
+    BinaryTreeNode<int> *root = new BinaryTreeNode<int>(arr[mid]);
+    root->left = minimalTreeHelper(arr, left, mid-1);
+    root->right = minimalTreeHelper(arr, mid+1, right);    
+    return root; 
+}
+
+BinaryTreeNode<int>* minimalTree(vector<int> &arr) {
+    int left = 0, right = (int)arr.size() - 1;
+    return minimalTreeHelper(arr, left, right);
+}
