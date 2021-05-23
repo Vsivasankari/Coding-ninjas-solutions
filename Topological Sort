@@ -1,0 +1,38 @@
+#include <stack>
+
+void topologicalSortUtil(vector<vector<int>> &adj, vector<bool> &visited, stack<int> &stk, int src) 
+{
+    visited[src] = true;  
+
+ 
+    for(int node : adj[src]) 
+    {
+        if(!visited[node]) {
+            topologicalSortUtil(adj, visited, stk, node);
+        }
+    }
+    stk.push(src);
+}
+
+vector<int> topologicalSort(vector<vector<int>> &edges, int V, int E) 
+{
+    vector<vector<int>> adj(V);
+    for(int i = 0; i < E; i++) {
+        adj[edges[i][0]].push_back(edges[i][1]);
+    } 
+
+    vector<bool> visited(V);
+    stack<int> stk;
+    for(int i = 0; i < V; i++) {
+        if(!visited[i]) {
+            topologicalSortUtil(adj, visited, stk, i);
+        }
+    }
+    vector<int> result;
+    while(!stk.empty()) {
+        result.push_back(stk.top());
+        stk.pop();
+    }
+
+    return result;
+}
