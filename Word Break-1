@@ -1,0 +1,54 @@
+#include <unordered_map>
+#include <unordered_set>
+using namespace std;
+vector<string> getAllValidSentencesHelper(string &sentence, int idx, unordered_set<string> &dictionary, unordered_map<int, vector<string>> &dp, int size)
+{
+    if (idx == size)
+    {
+        return {""};
+    }
+    if (dp.find(idx) != dp.end())
+    {
+        return dp[idx];
+    }
+
+    vector<string> subPart, completePart;
+    string word = "";
+    for (int j = idx; j < size; j++)
+    {
+
+        word.push_back(sentence[j]);
+        if (dictionary.count(word) == 0)
+        {
+            continue;
+        }
+        subPart = getAllValidSentencesHelper(sentence, j + 1, dictionary, dp, size);
+        for (int i = 0; i < subPart.size(); i++)
+        {
+            if (subPart[i].size() != 0)
+            {
+                subPart[i] = word + " " + subPart[i];
+            }
+            else
+            {
+                subPart[i] = word + "" + subPart[i];
+            }
+        }
+        for (auto sub : subPart)
+        {
+            completePart.push_back(sub);
+        }
+    }
+    return dp[idx] = completePart;
+}
+vector<string> getAllValidSentences(string &sentence, vector<string> &dictionary)
+{
+    unordered_map<int, vector<string>> dp;
+    unordered_set<string> dict;
+
+    for (auto word : dictionary)
+    {
+        dict.insert(word);
+    }
+    return getAllValidSentencesHelper(sentence, 0, dict, dp, sentence.size());
+}
