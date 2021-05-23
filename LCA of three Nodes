@@ -1,0 +1,56 @@
+#include <vector>
+
+bool lcaOfThreeNodesHelper(int node, vector<BinaryTreeNode<int>*> &nodePath, BinaryTreeNode<int>* root) {
+    if (root == NULL) {
+        return false;
+    }
+
+    nodePath.push_back(root);
+
+    if (root->data == node) {
+        return true;
+    }
+
+    bool leftSubTree = lcaOfThreeNodesHelper(node, nodePath, root->left);
+    bool rightSubTree = lcaOfThreeNodesHelper(node, nodePath, root->right);
+
+    if (leftSubTree || rightSubTree) {
+        return true;
+    }
+
+  
+    nodePath.pop_back();
+    return false;
+}
+
+BinaryTreeNode<int>* lcaOfThreeNodes(BinaryTreeNode<int>* root, int node1, int node2, int node3) {
+  
+    vector<BinaryTreeNode<int>*> node1Path;
+    
+    vector<BinaryTreeNode<int>*> node2Path;
+
+    
+    vector<BinaryTreeNode<int>*> node3Path;
+
+    
+    lcaOfThreeNodesHelper(node1, node1Path, root);
+
+    
+    lcaOfThreeNodesHelper(node2, node2Path, root);
+
+    
+    lcaOfThreeNodesHelper(node3, node3Path, root);
+
+    
+    int i;
+    for (i = 0; i < node1Path.size() && i < node2Path.size() && i < node3Path.size(); i++) {
+
+        if (node1Path[i]->data != node2Path[i]->data || node1Path[i]->data != node3Path[i]->data 
+            || node2Path[i]->data != node3Path[i]->data) {
+            break;
+        }
+
+    }
+
+    return node1Path[i - 1];
+}
